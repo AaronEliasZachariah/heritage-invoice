@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-heritage-cream font-sans text-heritage-brown;
+    background-image:
+      radial-gradient(120% 120% at 100% 0%, rgba(126, 155, 122, 0.12) 0%, transparent 45%),
+      radial-gradient(90% 90% at 0% 100%, rgba(176, 141, 87, 0.1) 0%, transparent 40%);
+    background-attachment: fixed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif text-heritage-forest;
+    font-optical-sizing: auto;
+  }
+
+  /* A refined focus ring that matches the brass accent. */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-heritage-brass/70 ring-offset-2 ring-offset-heritage-cream;
+  }
+}
+
+@layer components {
+  .field-label {
+    @apply mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-heritage-brownLight;
+  }
+
+  .field-input {
+    @apply w-full rounded-lg border border-heritage-sand bg-white/70 px-3.5 py-2.5 text-sm text-heritage-brown
+      shadow-sm transition placeholder:text-heritage-brownLight/50
+      hover:border-heritage-sage/70 focus:border-heritage-emerald focus:bg-white;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold
+      transition focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-heritage-emerald text-heritage-cream shadow-card hover:bg-heritage-emeraldDark;
+  }
+
+  .btn-secondary {
+    @apply btn border border-heritage-sand bg-white/60 text-heritage-forest hover:border-heritage-sage hover:bg-white;
+  }
+
+  .btn-ghost {
+    @apply btn text-heritage-brownLight hover:bg-heritage-beige hover:text-heritage-forest;
+  }
+
+  .card {
+    @apply rounded-xl2 border border-heritage-sand/80 bg-heritage-beige/60 p-6 shadow-card backdrop-blur-sm;
+  }
+}
+
+/* Keep the on-screen invoice preview crisp when printed straight from the browser. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-area,
+  #print-area * {
+    visibility: visible;
+  }
+  #print-area {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    box-shadow: none;
+  }
+  /* Don't print the placeholder text of empty click-to-edit fields. */
+  .editable[data-empty='true'] {
+    color: transparent !important;
+  }
+}
+
+/* Custom scrollbar — subtle, in palette. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(126, 155, 122, 0.45);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(47, 107, 79, 0.6);
+  background-clip: content-box;
+}
