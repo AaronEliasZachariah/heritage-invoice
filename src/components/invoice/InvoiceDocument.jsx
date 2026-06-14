@@ -15,7 +15,7 @@ const C = {
   cream: '#FBF7EE',
 }
 
-// Built-in PDF fonts only (Times for serif headings, Helvetica for data) —
+// Built-in PDF fonts only (Times for serif headings, Helvetica for data):
 // no network font registration, so PDFs render reliably everywhere.
 const styles = StyleSheet.create({
   page: {
@@ -134,7 +134,7 @@ export default function InvoiceDocument({ state }) {
           <View>
             <Text style={styles.docTitle}>{title}</Text>
             <Text style={styles.metaLine}>
-              No: <Text style={styles.metaValue}>{meta.invoiceNumber || '—'}</Text>
+              No: <Text style={styles.metaValue}>{meta.invoiceNumber || '-'}</Text>
             </Text>
             <Text style={styles.metaLine}>
               Issued: <Text style={styles.metaValue}>{formatDate(meta.issueDate)}</Text>
@@ -149,7 +149,7 @@ export default function InvoiceDocument({ state }) {
         <View style={styles.billRow}>
           <View style={styles.block}>
             <Text style={styles.sectionLabel}>Bill to</Text>
-            <Text style={styles.strong}>{client.name || '—'}</Text>
+            <Text style={styles.strong}>{client.name || '-'}</Text>
             {client.abn ? <Text style={styles.muted}>ABN: {formatABN(client.abn)}</Text> : null}
             {client.address ? <Text style={styles.muted}>{client.address}</Text> : null}
             {client.email ? <Text style={styles.muted}>{client.email}</Text> : null}
@@ -177,7 +177,7 @@ export default function InvoiceDocument({ state }) {
           ) : (
             items.map((it) => (
               <View style={styles.tr} key={it.id} wrap={false}>
-                <Text style={styles.cDesc}>{it.description || '—'}</Text>
+                <Text style={styles.cDesc}>{it.description || '-'}</Text>
                 <Text style={styles.cQty}>
                   {Number(it.quantity) || 0} {it.unit !== 'fixed' ? it.unit : ''}
                 </Text>

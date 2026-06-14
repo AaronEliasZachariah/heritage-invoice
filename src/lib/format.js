@@ -15,7 +15,7 @@ export function formatCurrency(amount) {
 
 /** Format an ISO date string (yyyy-mm-dd) as "13 June 2026". */
 export function formatDate(iso) {
-  if (!iso) return '—'
+  if (!iso) return '-'
   // Parse as a local date to avoid timezone drift on yyyy-mm-dd strings.
   const [y, m, d] = iso.split('-').map(Number)
   if (!y || !m || !d) return iso

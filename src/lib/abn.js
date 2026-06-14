@@ -1,7 +1,7 @@
 // Australian Business Number (ABN) validation.
 //
 // The ATO defines an 11-digit ABN with a modulus-89 checksum. Validating it
-// client-side gives first-time contractors instant, trustworthy feedback —
+// client-side gives first-time contractors instant, trustworthy feedback;
 // a wrong ABN on a tax invoice is one of the most common compliance mistakes.
 //
 // Algorithm (per the ATO / Australian Business Register specification):
@@ -18,7 +18,7 @@ export function normalizeABN(value) {
 
 /**
  * Returns true only for a structurally valid 11-digit ABN.
- * An empty value returns false — use `isABNPresent` to distinguish "blank"
+ * An empty value returns false; use `isABNPresent` to distinguish "blank"
  * from "present but invalid" when surfacing warnings vs errors.
  */
 export function isValidABN(value) {

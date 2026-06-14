@@ -5,7 +5,7 @@ import { formatCurrency } from '../../lib/format.js'
 import ValidationSummary from './ValidationSummary.jsx'
 import { PrinterIcon, DownloadIcon } from '../ui/Icons.jsx'
 
-// Lazy-load the PDF machinery (@react-pdf/renderer) — it's heavy and only
+// Lazy-load the PDF machinery (@react-pdf/renderer); it's heavy and only
 // needed once the user reaches the export step.
 const DownloadButton = lazy(() => import('../invoice/DownloadButton.jsx'))
 
@@ -32,7 +32,7 @@ export default function ReviewStep() {
         <ValidationSummary validation={validation} />
         {!validation.isExportable && (
           <p className="mt-3 text-xs text-red-700">
-            Resolve the items marked in red before exporting — they’re required for a valid invoice.
+            Resolve the items marked in red before exporting. They’re required for a valid invoice.
           </p>
         )}
       </div>

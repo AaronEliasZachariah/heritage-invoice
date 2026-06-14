@@ -22,7 +22,7 @@ const qtyNum = (q) => {
 }
 
 /**
- * On-screen, true-to-PDF preview of the invoice — and a click-to-edit surface.
+ * On-screen, true-to-PDF preview of the invoice, and a click-to-edit surface.
  * Click any field to tweak it; edits flow straight into the PDF (no re-prompt).
  * Wrapped in #print-area so the browser's native print also produces a clean doc.
  */
@@ -63,7 +63,7 @@ export default function InvoicePreview() {
                 ariaLabel="Business name"
               />
             </h2>
-            <div className="mt-1 space-y-0.5 text-xs text-heritage-brownLight">
+            <div className="mt-1.5 space-y-1.5 text-xs leading-relaxed text-heritage-brownLight">
               {supplier.abn && (
                 <p>
                   ABN:{' '}
@@ -121,8 +121,16 @@ export default function InvoicePreview() {
                   />
                 </dd>
               </div>
-              <Meta label="Issued" value={formatDate(meta.issueDate)} />
-              <Meta label="Due" value={formatDate(meta.dueDate)} />
+              <EditableDate
+                label="Issued"
+                value={meta.issueDate}
+                onCommit={(v) => setField('meta', 'issueDate', v)}
+              />
+              <EditableDate
+                label="Due"
+                value={meta.dueDate}
+                onCommit={(v) => setField('meta', 'dueDate', v)}
+              />
             </dl>
           </div>
         </div>
@@ -130,10 +138,10 @@ export default function InvoicePreview() {
         {/* Bill to */}
         <div className="mt-8 flex items-end justify-between gap-6">
           <div>
-            <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-heritage-brass">
+            <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-heritage-brass">
               Bill to
             </p>
-            <p className="text-sm font-semibold text-heritage-brown">
+            <p className="text-sm font-semibold leading-snug text-heritage-brown">
               <EditableText
                 value={client.name}
                 onCommit={(v) => setField('client', 'name', v)}
@@ -141,7 +149,7 @@ export default function InvoicePreview() {
                 ariaLabel="Client name"
               />
             </p>
-            <div className="mt-0.5 space-y-0.5 text-xs text-heritage-brownLight">
+            <div className="mt-1.5 space-y-1.5 text-xs leading-relaxed text-heritage-brownLight">
               {client.abn && (
                 <p>
                   ABN:{' '}
@@ -198,7 +206,7 @@ export default function InvoicePreview() {
             {items.length === 0 ? (
               <tr className="border-b border-heritage-sand">
                 <td className="px-3 py-3 text-xs text-heritage-brownLight" colSpan={4}>
-                  No items yet — add them in the Items step.
+                  No items yet. Add them in the Items step.
                 </td>
               </tr>
             ) : (
@@ -342,6 +350,38 @@ export default function InvoicePreview() {
   )
 }
 
+// Shows a nicely-formatted date but opens a native calendar picker on click.
+// A transparent <input type="date"> overlays the text and captures the click.
+function EditableDate({ label, value, onCommit }) {
+  return (
+    <div className="flex justify-end gap-2">
+      <dt>{label}:</dt>
+      <dd className="font-medium text-heritage-brown">
+        <span className="relative inline-flex cursor-pointer rounded-sm px-0.5 transition hover:bg-heritage-brass/15">
+          {formatDate(value)}
+          <input
+            type="date"
+            value={value || ''}
+            onChange={(e) => onCommit(e.target.value)}
+            onClick={(e) => {
+              const el = e.currentTarget
+              if (typeof el.showPicker === 'function') {
+                try {
+                  el.showPicker()
+                } catch {
+                  /* showPicker needs user activation; the click provides it */
+                }
+              }
+            }}
+            aria-label={`${label} date`}
+            className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+          />
+        </span>
+      </dd>
+    </div>
+  )
+}
+
 function PayLine({ label, value, placeholder, onCommit }) {
   const empty = !value || !String(value).trim()
   return (
@@ -352,11 +392,3 @@ function PayLine({ label, value, placeholder, onCommit }) {
   )
 }
 
-function Meta({ label, value }) {
-  return (
-    <div className="flex justify-end gap-2">
-      <dt>{label}:</dt>
-      <dd className="font-medium text-heritage-brown">{value}</dd>
-    </div>
-  )
-}

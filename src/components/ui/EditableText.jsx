@@ -3,7 +3,7 @@ import { useRef } from 'react'
 /**
  * Click-to-edit inline text. Renders a formatted value when idle and the raw
  * value while editing; commits on blur or Enter (Escape cancels). Uncontrolled
- * by design — it never changes its own DOM mid-edit, so the caret stays put.
+ * by design; it never changes its own DOM mid-edit, so the caret stays put.
  *
  * Props:
  *  - value      current stored value

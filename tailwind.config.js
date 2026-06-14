@@ -4,10 +4,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        // "Heritage Wealth" palette — emerald & sage greens, soft beige
+        // "Heritage Wealth" palette: emerald & sage greens, soft beige
         // backgrounds, deep brown typography, brass accents.
         heritage: {
-          forest: '#1B3A2B', // deepest green — headings on light, dark panels
+          forest: '#1B3A2B', // deepest green; headings on light, dark panels
           emerald: '#2F6B4F', // primary action green
           emeraldDark: '#244F3B',
           sage: '#7E9B7A', // muted secondary green

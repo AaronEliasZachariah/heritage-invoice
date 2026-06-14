@@ -1,7 +1,7 @@
 // Australian Taxation Office (ATO) compliance logic.
 //
 // Every rule below is grounded in current (2025–2026) ATO / business.gov.au
-// guidance — see SOURCES at the bottom of this file. This module is the single
+// guidance; see SOURCES at the bottom of this file. This module is the single
 // source of truth for: the document title, the GST calculation footer, and the
 // validation that drives the wizard's educational guardrails.
 
@@ -60,7 +60,7 @@ export function validateInvoice(state) {
 
   // --- Supplier (you) ---
   if (!supplier.name?.trim()) {
-    add('error', 'supplier-name', 'supplier.name', 'Add your name or business name — it must appear on every invoice.')
+    add('error', 'supplier-name', 'supplier.name', 'Add your name or business name. It must appear on every invoice.')
   }
   if (!isABNPresent(supplier.abn)) {
     add(
@@ -70,7 +70,7 @@ export function validateInvoice(state) {
       'No ABN supplied. Without one, your client may legally withhold 47% of payments over $75.',
     )
   } else if (!isValidABN(supplier.abn)) {
-    add('error', 'supplier-abn-invalid', 'supplier.abn', 'This ABN fails the ATO checksum — double-check the 11 digits.')
+    add('error', 'supplier-abn-invalid', 'supplier.abn', 'This ABN fails the ATO checksum. Double-check the 11 digits.')
   }
 
   // --- Client ---
@@ -86,7 +86,7 @@ export function validateInvoice(state) {
     add('warning', 'client-name', 'client.name', "Add your client's name so they can match and pay the invoice.")
   }
   if (isABNPresent(client.abn) && !isValidABN(client.abn)) {
-    add('warning', 'client-abn-invalid', 'client.abn', "The client's ABN fails the checksum — verify it if you entered one.")
+    add('warning', 'client-abn-invalid', 'client.abn', "The client's ABN fails the checksum. Verify it if you entered one.")
   }
 
   // --- Dates & numbering ---
@@ -94,7 +94,7 @@ export function validateInvoice(state) {
     add('error', 'issue-date', 'meta.issueDate', 'A date of issue is required on a valid invoice.')
   }
   if (meta.issueDate && meta.dueDate && meta.dueDate < meta.issueDate) {
-    add('warning', 'due-date', 'meta.dueDate', 'The due date is before the issue date — set a clear, later payment date.')
+    add('warning', 'due-date', 'meta.dueDate', 'The due date is before the issue date. Set a clear, later payment date.')
   }
   if (!meta.invoiceNumber?.trim()) {
     add('info', 'invoice-number', 'meta.invoiceNumber', 'Give each invoice a unique number to keep clean records.')
@@ -108,7 +108,7 @@ export function validateInvoice(state) {
   lineItems.forEach((it) => {
     const hasValue = Number(it.rate) > 0 || Number(it.quantity) > 0
     if (hasValue && !it.description?.trim()) {
-      add('warning', `item-desc-${it.id}`, 'lineItems', 'Describe each item — the ATO requires a brief description of what was sold.')
+      add('warning', `item-desc-${it.id}`, 'lineItems', 'Describe each item. The ATO requires a brief description of what was sold.')
     }
   })
 
@@ -130,8 +130,8 @@ function formatPlain(amount) {
 
 // Primary sources backing this module (current as of 2026):
 export const SOURCES = [
-  { label: 'ATO — Tax invoices', url: 'https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/tax-invoices' },
-  { label: 'ATO — Registering for GST', url: 'https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst' },
-  { label: 'ATO — Withholding if ABN not provided', url: 'https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/payg-withholding/payments-you-need-to-withhold-from/withholding-from-suppliers/withholding-if-abn-not-provided' },
-  { label: 'business.gov.au — How to invoice', url: 'https://business.gov.au/finance/payments-and-invoicing/how-to-invoice' },
+  { label: 'ATO: Tax invoices', url: 'https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/tax-invoices' },
+  { label: 'ATO: Registering for GST', url: 'https://www.ato.gov.au/businesses-and-organisations/gst-excise-and-indirect-taxes/gst/registering-for-gst' },
+  { label: 'ATO: Withholding if ABN not provided', url: 'https://www.ato.gov.au/businesses-and-organisations/hiring-and-paying-your-workers/payg-withholding/payments-you-need-to-withhold-from/withholding-from-suppliers/withholding-if-abn-not-provided' },
+  { label: 'business.gov.au: How to invoice', url: 'https://business.gov.au/finance/payments-and-invoicing/how-to-invoice' },
 ]

@@ -40,7 +40,7 @@ export default function AiPrompt({ onApplied }) {
         <Tooltip content={tooltips.aiPrompt} label="About the AI wizard" />
       </div>
       <p className="mb-4 text-sm text-heritage-sageLight">
-        Describe the job in plain English. The assistant drafts your invoice — you review every
+        Describe the job in plain English. The assistant drafts your invoice. You review every
         detail before exporting.
       </p>
 
@@ -106,12 +106,12 @@ export default function AiPrompt({ onApplied }) {
       {status.state === 'done' && (
         <p className="mt-3 text-xs text-heritage-sageLight">
           {status.source === 'ai'
-            ? '✓ Draft created. Review the details below — nothing is final until you export.'
+            ? '✓ Draft created. Review the details below. Nothing is final until you export.'
             : '✓ Draft created with basic parsing (AI service offline). Please review carefully.'}
         </p>
       )}
       {status.state === 'error' && (
-        <p className="mt-3 text-xs text-red-200">Couldn’t parse that — try rephrasing, or fill the form manually. ({status.message})</p>
+        <p className="mt-3 text-xs text-red-200">Couldn’t parse that. Try rephrasing, or fill the form manually. ({status.message})</p>
       )}
     </section>
   )

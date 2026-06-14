@@ -1,4 +1,4 @@
-// Vercel serverless function — POST /api/parse
+// Vercel serverless function: POST /api/parse
 //
 // Turns a contractor's plain-English description into structured invoice data
 // using OpenAI. The API key lives only on the server (OPENAI_API_KEY); it is
@@ -16,7 +16,7 @@ const MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini'
 // Protects your OpenAI tokens from spam. Active only when the Upstash Redis env
 // vars are present (set automatically by the Vercel Upstash integration). When
 // they're absent (local dev, or before you've added the integration), the
-// limiter is skipped — fail-open — so nothing breaks. Tune the limits here.
+// limiter is skipped (fail-open), so nothing breaks. Tune the limits here.
 const RATE_PER_MINUTE = 10
 const RATE_PER_DAY = 100
 
@@ -56,27 +56,27 @@ async function rateLimited(req, res) {
     const blocked = m.success ? d : m
     const retry = Math.max(1, Math.ceil((blocked.reset - Date.now()) / 1000))
     res.setHeader('Retry-After', String(retry))
-    res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' })
+    res.status(429).json({ error: 'Too many requests. Please wait a moment and try again.' })
     return true
   } catch (err) {
-    // Never let a limiter outage take down the endpoint — fail open.
+    // Never let a limiter outage take down the endpoint; fail open.
     console.error('[api/parse] rate limit check failed:', err?.message)
     return false
   }
 }
 
-const SYSTEM = `You convert a freelancer/contractor's plain-English description of work into structured data for an Australian invoice. Map EVERY detail to its dedicated field — never dump information into notes.
+const SYSTEM = `You convert a freelancer/contractor's plain-English description of work into structured data for an Australian invoice. Map EVERY detail to its dedicated field; never dump information into notes.
 
 Rules:
 - Extract ONLY what the user states or clearly implies. Never invent values. Use null for anything not provided.
-- Treat bracketed placeholders such as "[Insert bank name]" or "[Insert 0000 0000]" as NOT provided — use null.
+- Treat bracketed placeholders such as "[Insert bank name]" or "[Insert 0000 0000]" as NOT provided; use null.
 - Rates are GST-EXCLUSIVE (the amount before GST).
 - "for <X>" usually names the client. Quantities like "100 hours" map to quantity + unit; "$20/hr" maps to rate.
 - The unit MUST be one of: "hours", "days", "units", "items", "fixed". Map "/hr" or "per hour" to "hours", "/day" or "per day" to "days", and a single fixed-price job to "fixed" (quantity 1).
-- Bank name, account name, BSB, account number and PayID go in the "payment" object — NEVER in notes.
+- Bank name, account name, BSB, account number and PayID go in the "payment" object; NEVER in notes.
 - Invoice number -> invoiceNumber. Dates -> issueDate / dueDate, each in ISO format (YYYY-MM-DD).
 - Set gstRegistered to true only if the user clearly indicates they are registered for GST or are charging GST. Otherwise use null.
-- "notes" is ONLY for genuine free-text remarks or payment terms the user actually wrote (e.g. "Payment due within 14 days", "Thank you for your business"). NEVER put the document title/header, invoice number, dates, totals, GST status, or bank/account details in notes — each of those has its own field. If there are no genuine remarks, set notes to null.`
+- "notes" is ONLY for genuine free-text remarks or payment terms the user actually wrote (e.g. "Payment due within 14 days", "Thank you for your business"). NEVER put the document title/header, invoice number, dates, totals, GST status, or bank/account details in notes; each of those has its own field. If there are no genuine remarks, set notes to null.`
 
 const nullableString = { type: ['string', 'null'] }
 
@@ -184,7 +184,7 @@ export default async function handler(req, res) {
       // Newer OpenAI models require max_completion_tokens (max_tokens is rejected).
       // Headroom covers models that spend tokens on internal reasoning.
       max_completion_tokens: 2048,
-      // Structured Outputs — guarantees the response matches SCHEMA exactly.
+      // Structured Outputs: guarantees the response matches SCHEMA exactly.
       response_format: { type: 'json_schema', json_schema: SCHEMA },
       messages: [
         { role: 'system', content: SYSTEM },

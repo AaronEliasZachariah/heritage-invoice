@@ -80,7 +80,7 @@ export default function ClientStep() {
             </>
           ) : (
             <>
-              Under {formatCurrency(HIGH_VALUE_THRESHOLD)}, the buyer’s details are optional — but
+              Under {formatCurrency(HIGH_VALUE_THRESHOLD)}, the buyer’s details are optional but
               recommended so your client can match the payment.
             </>
           )}

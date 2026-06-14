@@ -14,7 +14,7 @@ export default function App() {
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-heritage-brownLight sm:text-base">
             Built for first-time contractors. Describe the job, and the wizard drafts an
-            ATO-compliant invoice — with plain-English guidance at every step.
+            ATO-compliant invoice, with plain-English guidance at every step.
           </p>
         </div>
 

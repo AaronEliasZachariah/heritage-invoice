@@ -1,5 +1,5 @@
 // Educational guardrails. Short, plain-English explanations of *why* a field
-// matters — surfaced as non-intrusive tooltips beside each input. Sourced from
+// matters; surfaced as non-intrusive tooltips beside each input. Sourced from
 // current ATO and business.gov.au guidance (see src/lib/compliance.js SOURCES).
 
 export const tooltips = {
@@ -9,11 +9,11 @@ export const tooltips = {
   },
   documentTitle: {
     title: 'Invoice vs Tax Invoice',
-    body: 'The title changes automatically based on your GST status. Only a GST-registered business may issue a document titled “Tax Invoice”. This isn\'t cosmetic — your client needs a valid tax invoice to claim a GST credit.',
+    body: 'The title changes automatically based on your GST status. Only a GST-registered business may issue a document titled “Tax Invoice”. This isn\'t cosmetic. Your client needs a valid tax invoice to claim a GST credit.',
   },
   supplierAbn: {
     title: 'What is an ABN?',
-    body: 'An Australian Business Number is a unique 11-digit ID for your business. It must appear on your invoices. If you leave it off, a business client is generally required to withhold 47% of any payment over $75 and send it to the ATO — so always include it.',
+    body: 'An Australian Business Number is a unique 11-digit ID for your business. It must appear on your invoices. If you leave it off, a business client is generally required to withhold 47% of any payment over $75 and send it to the ATO, so always include it.',
   },
   supplierName: {
     title: 'Your identity',
@@ -25,7 +25,7 @@ export const tooltips = {
   },
   clientName: {
     title: "Your client's details",
-    body: 'For invoices of $1,000 or more, the ATO requires the buyer to be identified — by name or ABN. For smaller invoices it\'s optional but recommended so your client can match the payment.',
+    body: 'For invoices of $1,000 or more, the ATO requires the buyer to be identified by name or ABN. For smaller invoices it\'s optional but recommended so your client can match the payment.',
   },
   clientAbn: {
     title: "Client's ABN (optional)",
@@ -49,7 +49,7 @@ export const tooltips = {
   },
   rate: {
     title: 'Rate (excluding GST)',
-    body: 'Enter your rate before GST. If you\'re registered for GST, 10% is added automatically on top of the subtotal so GST is exactly 1/11th of the total — exactly how the ATO expects it.',
+    body: 'Enter your rate before GST. If you\'re registered for GST, 10% is added automatically on top of the subtotal so GST is exactly 1/11th of the total, exactly how the ATO expects it.',
   },
   notes: {
     title: 'Notes & payment terms',
@@ -57,6 +57,6 @@ export const tooltips = {
   },
   aiPrompt: {
     title: 'Describe the job in plain English',
-    body: 'Tell the assistant what you did, for whom, and your rate — e.g. “40 hours of web development at $90/hr for Acme Pty Ltd”. It fills in the invoice for you; you review and refine before exporting.',
+    body: 'Tell the assistant what you did, for whom, and your rate, e.g. “40 hours of web development at $90/hr for Acme Pty Ltd”. It fills in the invoice for you; you review and refine before exporting.',
   },
 }

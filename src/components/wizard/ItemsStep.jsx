@@ -90,7 +90,7 @@ export default function ItemsStep() {
           ))}
         </div>
 
-        {/* Suggestions for the free-text unit field — users can also type their own. */}
+        {/* Suggestions for the free-text unit field; users can also type their own. */}
         <datalist id="unit-suggestions">
           {UNITS.map((u) => (
             <option key={u} value={u} />

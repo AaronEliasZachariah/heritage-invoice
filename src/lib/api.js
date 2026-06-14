@@ -26,7 +26,7 @@ export async function parsePrompt(prompt) {
     const data = await res.json()
     return { data: data.invoice ?? data, source: 'ai' }
   } catch (err) {
-    // Network/route/key failure — degrade gracefully rather than dead-end.
+    // Network/route/key failure; degrade gracefully rather than dead-end.
     console.warn('[ai] /api/parse unavailable, using local parser:', err.message)
     return { data: localParse(prompt), source: 'local' }
   }

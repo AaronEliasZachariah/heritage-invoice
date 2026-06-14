@@ -18,7 +18,7 @@ export default function DetailsStep() {
 
   return (
     <div className="space-y-7">
-      {/* GST registration — drives the whole document */}
+      {/* GST registration; drives the whole document */}
       <div className="rounded-xl border border-heritage-sand bg-white/60 p-5">
         <div className="flex items-start justify-between gap-4">
           <div>

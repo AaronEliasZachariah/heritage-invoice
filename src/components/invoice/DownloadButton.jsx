@@ -26,7 +26,7 @@ export default function DownloadButton({ state, disabled }) {
       {({ loading, error }) => (
         <>
           <DownloadIcon className="h-4 w-4" />
-          {error ? 'PDF error — retry' : loading ? 'Preparing PDF…' : 'Download PDF'}
+          {error ? 'PDF error, retry' : loading ? 'Preparing PDF…' : 'Download PDF'}
         </>
       )}
     </PDFDownloadLink>

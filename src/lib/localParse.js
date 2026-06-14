@@ -1,4 +1,4 @@
-// Offline fallback parser. Deliberately small — it covers the common
+// Offline fallback parser. Deliberately small; it covers the common
 // "<qty> <unit> of <work> at $<rate>/<unit> for <client>" shape so the demo
 // works without an API key. The serverless Claude route is the primary path
 // and handles arbitrary phrasing far better.

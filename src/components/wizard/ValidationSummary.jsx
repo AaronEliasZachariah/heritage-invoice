@@ -12,7 +12,7 @@ export default function ValidationSummary({ validation }) {
           <CheckIcon className="h-5 w-5" />
         </span>
         <p className="text-sm font-medium text-heritage-forest">
-          Looks compliant. Every required ATO field is present — you’re ready to export.
+          Looks compliant. Every required ATO field is present. You’re ready to export.
         </p>
       </div>
     )

@@ -4,7 +4,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 // Dev-only middleware so `npm run dev` also serves the /api/parse serverless
-// route locally (reading OPENAI_API_KEY from .env) — no Vercel CLI required.
+// route locally (reading OPENAI_API_KEY from .env); no Vercel CLI required.
 // In production, Vercel runs api/parse.js as a real serverless function; this
 // plugin is `apply: 'serve'` so it never affects the build.
 function devApiRoute(env) {
@@ -12,7 +12,7 @@ function devApiRoute(env) {
     name: 'dev-api-route',
     apply: 'serve',
     configureServer(server) {
-      // Expose .env values to the handler's process.env (server-side only —
+      // Expose .env values to the handler's process.env (server-side only;
       // these are NOT bundled into the client).
       for (const [key, value] of Object.entries(env)) {
         if (process.env[key] === undefined) process.env[key] = value

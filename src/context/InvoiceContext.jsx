@@ -143,7 +143,7 @@ export function InvoiceProvider({ children }) {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
     } catch {
-      /* storage may be unavailable (private mode) — non-fatal */
+      /* storage may be unavailable (private mode); non-fatal */
     }
   }, [state])
 
