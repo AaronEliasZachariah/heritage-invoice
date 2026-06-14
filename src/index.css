@@ -82,6 +82,12 @@
   .editable[data-empty='true'] {
     color: transparent !important;
   }
+  /* Hide empty payment/notes lines (and their labels) when printing. */
+  .pay-block[data-empty='true'],
+  .pay-line[data-empty='true'],
+  .notes-block[data-empty='true'] {
+    display: none !important;
+  }
 }
 
 /* Custom scrollbar — subtle, in palette. */

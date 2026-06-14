@@ -58,6 +58,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   return {
     plugins: [react(), devApiRoute(env)],
-    server: { port: 5173 },
+    // Honour a PORT env override (used by tooling); default to 5173 locally.
+    server: { port: Number(process.env.PORT) || 5173 },
   }
 })

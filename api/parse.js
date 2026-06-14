@@ -6,9 +6,64 @@
 // local parser if this route is unavailable.
 
 import OpenAI from 'openai'
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
 
 // Cheap + fast model for this simple extraction task. Override with OPENAI_MODEL.
 const MODEL = process.env.OPENAI_MODEL || 'gpt-4o-mini'
+
+// --- Per-IP rate limiting -----------------------------------------------------
+// Protects your OpenAI tokens from spam. Active only when the Upstash Redis env
+// vars are present (set automatically by the Vercel Upstash integration). When
+// they're absent (local dev, or before you've added the integration), the
+// limiter is skipped — fail-open — so nothing breaks. Tune the limits here.
+const RATE_PER_MINUTE = 10
+const RATE_PER_DAY = 100
+
+let _limiters // undefined = unchecked, null = not configured
+function getLimiters() {
+  if (_limiters !== undefined) return _limiters
+  // Accept either the Upstash-native names or Vercel KV's aliases.
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN
+  if (!url || !token) {
+    _limiters = null
+    return null
+  }
+  const redis = new Redis({ url, token })
+  _limiters = {
+    minute: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(RATE_PER_MINUTE, '1 m'), prefix: 'rl:parse:min' }),
+    day: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(RATE_PER_DAY, '1 d'), prefix: 'rl:parse:day' }),
+  }
+  return _limiters
+}
+
+function clientIp(req) {
+  const xff = req.headers['x-forwarded-for']
+  if (typeof xff === 'string' && xff.trim()) return xff.split(',')[0].trim()
+  const real = req.headers['x-real-ip']
+  return (typeof real === 'string' && real) || 'unknown'
+}
+
+// Returns true if the request was rate-limited (a 429 has been sent).
+async function rateLimited(req, res) {
+  const limiters = getLimiters()
+  if (!limiters) return false
+  try {
+    const ip = clientIp(req)
+    const [m, d] = await Promise.all([limiters.minute.limit(ip), limiters.day.limit(ip)])
+    if (m.success && d.success) return false
+    const blocked = m.success ? d : m
+    const retry = Math.max(1, Math.ceil((blocked.reset - Date.now()) / 1000))
+    res.setHeader('Retry-After', String(retry))
+    res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' })
+    return true
+  } catch (err) {
+    // Never let a limiter outage take down the endpoint — fail open.
+    console.error('[api/parse] rate limit check failed:', err?.message)
+    return false
+  }
+}
 
 const SYSTEM = `You convert a freelancer/contractor's plain-English description of work into structured data for an Australian invoice. Map EVERY detail to its dedicated field — never dump information into notes.
 
@@ -109,6 +164,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
+  // Reject spam before doing any work or spending tokens.
+  if (await rateLimited(req, res)) return
+
   if (!process.env.OPENAI_API_KEY) {
     return res.status(500).json({ error: 'OPENAI_API_KEY is not configured on the server.' })
   }
@@ -144,9 +202,16 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ invoice: sanitize(JSON.parse(message.content)) })
   } catch (err) {
+    // Log details server-side only; never echo error contents to the client,
+    // as upstream error messages can contain the API key.
     const status = err?.status === 401 ? 401 : 502
-    console.error('[api/parse] error:', err?.message)
-    return res.status(status).json({ error: err?.message || 'Failed to parse the prompt.' })
+    console.error('[api/parse] error:', err?.name, err?.message)
+    return res.status(status).json({
+      error:
+        status === 401
+          ? 'OpenAI rejected the API key.'
+          : 'Failed to generate from that prompt. Please try again.',
+    })
   }
 }
 

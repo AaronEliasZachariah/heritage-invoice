@@ -277,41 +277,78 @@ export default function InvoicePreview() {
           ))}
         </div>
 
-        {(hasPayment || notes) && (
-          <div className="mt-5 flex flex-wrap gap-x-10 gap-y-4">
-            {hasPayment && (
-              <div>
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-heritage-brass">
-                  Payment details
-                </p>
-                <div className="space-y-0.5 text-xs text-heritage-brownLight">
-                  {payment.bankName && <p>Bank: {payment.bankName}</p>}
-                  {payment.accountName && <p>Account name: {payment.accountName}</p>}
-                  {payment.bsb && <p>BSB: {payment.bsb}</p>}
-                  {payment.accountNumber && <p>Account no: {payment.accountNumber}</p>}
-                  {payment.payId && <p>PayID: {payment.payId}</p>}
-                </div>
-              </div>
-            )}
-            {notes && (
-              <div className="max-w-xs">
-                <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-heritage-brass">
-                  Notes
-                </p>
-                <p className="whitespace-pre-line text-xs text-heritage-brownLight">
-                  <EditableText
-                    value={notes}
-                    onCommit={setNotes}
-                    multiline
-                    ariaLabel="Notes"
-                  />
-                </p>
-              </div>
-            )}
+        {/* Payment + notes are always shown on screen so empty fields can be
+            clicked and filled. Empty lines are hidden when printed (see the
+            @media print rules) and the PDF only renders fields that have values. */}
+        <div className="mt-5 flex flex-wrap gap-x-10 gap-y-4">
+          <div className="pay-block min-w-[11rem]" data-empty={hasPayment ? 'false' : 'true'}>
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-heritage-brass">
+              Payment details
+            </p>
+            <div className="space-y-0.5 text-xs text-heritage-brownLight">
+              <PayLine
+                label="Bank"
+                value={payment.bankName}
+                placeholder="Bank name"
+                onCommit={(v) => setField('payment', 'bankName', v)}
+              />
+              <PayLine
+                label="Account name"
+                value={payment.accountName}
+                placeholder="Account name"
+                onCommit={(v) => setField('payment', 'accountName', v)}
+              />
+              <PayLine
+                label="BSB"
+                value={payment.bsb}
+                placeholder="000-000"
+                onCommit={(v) => setField('payment', 'bsb', v)}
+              />
+              <PayLine
+                label="Account no"
+                value={payment.accountNumber}
+                placeholder="12345678"
+                onCommit={(v) => setField('payment', 'accountNumber', v)}
+              />
+              <PayLine
+                label="PayID"
+                value={payment.payId}
+                placeholder="email or phone"
+                onCommit={(v) => setField('payment', 'payId', v)}
+              />
+            </div>
           </div>
-        )}
+
+          <div
+            className="notes-block min-w-[11rem] max-w-xs"
+            data-empty={notes && notes.trim() ? 'false' : 'true'}
+          >
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-heritage-brass">
+              Notes
+            </p>
+            <p className="whitespace-pre-line text-xs text-heritage-brownLight">
+              <EditableText
+                value={notes}
+                onCommit={setNotes}
+                multiline
+                placeholder="Add a note or payment terms"
+                ariaLabel="Notes"
+              />
+            </p>
+          </div>
+        </div>
       </div>
     </div>
+  )
+}
+
+function PayLine({ label, value, placeholder, onCommit }) {
+  const empty = !value || !String(value).trim()
+  return (
+    <p className="pay-line" data-empty={empty ? 'true' : 'false'}>
+      {label}:{' '}
+      <EditableText value={value} onCommit={onCommit} placeholder={placeholder} ariaLabel={label} />
+    </p>
   )
 }
 
